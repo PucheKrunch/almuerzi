@@ -29,7 +29,7 @@ router.post('/register', (req,res) => {
 
 router.post('/login', (req,res) => {
     const { email, password } = req.body
-    Users.findOne([ email]).exec()
+    Users.findOne({ email }).exec()
         .then(user => {
             if (!user) {
                 return res.send("Usuario y/o contraseña incorrecta")
