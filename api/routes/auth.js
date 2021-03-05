@@ -1,8 +1,16 @@
 const express = require('express')
 const crypto = require('crypto') //Encryption methods
+const jwt = require('jsonwebtoken')
 const Users = require('../models/Users')
+const { isAuthenticated } = require('../auth')
 
 const router = express.Router()
+
+const signToken = (_id) => {
+    return jwt.sign({_id}, 'mi_secreto', {
+        expiresIn: 60 * 60 * 24 * 365,
+    })
+}
 
 router.post('/register', (req,res) => {
     const { email, password } = req.body
@@ -43,6 +51,10 @@ router.post('/login', (req,res) => {
                 return res.send('Usuario y/o contraseña incorrecta')
             })
         })
+})
+
+router.get('/me', isAuthenticated, (req,res) => {
+    res.send(req.user)
 })
 
 module.exports = router
